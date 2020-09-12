@@ -7,18 +7,32 @@ public class Lab1 {
     private static int counter = 0;
     private static boolean isWithoutRepetitions = true;
     private static ArrayList<String> selectedWords = new ArrayList<>();
+    private static boolean isInList = false;
+    private static char[] word = new char[30];
 
     public static void clearWord(char[] word) {
         for(int i = 0; i < counter; ++i)
-            word[i] = ' ';
+            word[i] = '\0';
     }
+
+    public static void addInSelectedWords(){
+        String string = new String(word);
+        for(String w: selectedWords)
+            if( w.equals(string)) {
+                isInList = true;
+                break;
+            }
+        if (!isInList)
+            selectedWords.add(string);
+        isInList = false;
+    }
+
     public static void readFile() {
         File file = new File("src\\text");
         try {
             Scanner scanner = new Scanner(file);
             while(scanner.hasNextLine()){
                 String line = scanner.nextLine() + " ";
-                char[] word = new char[30];
                 for(int i = 0; i < line.length(); ++i){
                     boolean isNotLetter = ((int)line.charAt(i) < 97 && (int)line.charAt(i) > 90) || (int)line.charAt(i) < 65 || (int)line.charAt(i) > 122 ;
 
@@ -27,11 +41,7 @@ public class Lab1 {
                     else{
                         if (isNotLetter && counter != 0){
                             if(isWithoutRepetitions) {
-                                String string = new String(word);
-                                for(String w: selectedWords)
-                                    if( w == string)
-                                        continue;
-                                selectedWords.add(string);
+                                addInSelectedWords();
                             }
                             clearWord(word);
                             counter = 0;
